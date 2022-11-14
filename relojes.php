@@ -4,11 +4,11 @@ abstract class Reloj
     protected $digitos;
     protected $microwattsGastados;
     protected $contadorSeg;
-   protected function convertirSegundos(int $contadorSeg)
+   protected function convertirSegundos(int $digito)
    {
-    $horas = floor($contadorSeg/3600);
-    $minutos = floor(($contadorSeg-($horas*3600))/60);
-    $segundos = $contadorSeg-($horas*3600)-($minutos*60);
+    $horas = floor($digito/3600);
+    $minutos = floor(($digito-($horas*3600))/60);
+    $segundos = $digito-($horas*3600)-($minutos*60);
     if($horas < 10){
          $this->digitos[0] = '0';
          $this->digitos[1] = strval($horas);
