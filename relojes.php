@@ -2,8 +2,8 @@
 abstract class Reloj 
 {
     protected $digitos;
-   protected abstract function getGastoEnergetico(int $segundos);
-   protected abstract function calcularValorDigito(int $num);
+    protected $microwattsGastados;
+    protected $contadorSeg;
    protected function convertirSegundos(int $contadorSeg)
    {
     $horas = floor($contadorSeg/3600);
@@ -34,17 +34,37 @@ abstract class Reloj
             $this->digitos[5] = $segundos[1];
         }
     }
+    protected function encender()
+    {
+        $this->microwattsGastados = 36;
+    }
+    public function getGastoEnergetico(int $segundos)
+    {
+    $this->encender();    
+    $this->contadorSeg = 1;
+    while ($this->contadorSeg <= $segundos){
+        $this->convertirSegundos($this->contadorSeg);
+        foreach($this->digitos as $digito){
+            $this->microwattsGastados += $this->calcularGastoDigito($digito);
+            }
+        $this->contadorSeg++;
+        }
+        return $this->microwattsGastados;
+    }
+    protected abstract function calcularGastoDigito(int $num);
 
 }
 
 class RelojEstandar extends Reloj
 {
     protected $digitos;
+    protected $microwattsGastados;
+    protected $contadorSeg;
     function __construct()
     {
         $this->digitos = [0,0,0,0,0,0];
     }
-    protected function calcularValorDigito(int $num)
+    protected function calcularGastoDigito(int $num)
     {
         switch ($num){
             case '0':
@@ -69,34 +89,37 @@ class RelojEstandar extends Reloj
                 return 5;
         }
     }
-    public function getGastoEnergetico(int $segundos)
-        {
-    $contadorSeg=0;
-    $microwattsGastados=0;
-    while ($contadorSeg <= $segundos){
-        self::convertirSegundos($contadorSeg);
-        foreach($this->digitos as $digito){
-            $microwattsGastados += self::calcularValorDigito($digito);
-            }
-        $contadorSeg++;
-        }
-        return $microwattsGastados;
-    }
 }
 
 class RelojPremium extends Reloj
 {
     protected $digitos;
+    protected $microwattsGastados;
+    public $contadorSeg;
+    private $contadorDec;
+    private $casoCero;
     function __construct()
     {
         $this->digitos = [0,0,0,0,0,0];
+        $this->contadorDec = 0;
     }
-    protected function calcularValorDigito(int $num)
+    private function comprobarCero()
     {
+        if (($this->contadorSeg % 10) == 0){
+            $this->contadorDec++;
+        }
+        if (($this->contadorDec == 6) && ($this->contadorDec != 0)){
+            $this->contadorDec = 0;
+            $this->casoCero = 2;
+        }else $this->casoCero = 0;
+    }
+    protected function calcularGastoDigito(int $num)
+    {   
+        $this->comprobarCero();
         switch ($num){
             case '0':
-                return 0;
-            case '1':
+                return $this->casoCero;
+            case '1': 
                 return 0;
             case '2':
                 return 4;
@@ -115,21 +138,7 @@ class RelojPremium extends Reloj
             case '9':
                 return 0;
         }
-    }
-    public function getGastoEnergetico(int $segundos)
-    {
-       $contadorSeg=0;
-       $microwattsGastados=36;
-       while ($contadorSeg <= $segundos){
-        self::convertirSegundos($contadorSeg);
-        foreach($this->digitos as $digito){
-            $microwattsGastados += self::calcularValorDigito($digito);
-            }
-        $contadorSeg++;
-        }
-        return $microwattsGastados;
-    }
-    
+    }   
 }
 
 
@@ -143,7 +152,7 @@ echo 'Reloj Estandar (4seg)      : ' . $resultado . "\n";
 $relojPremium = new RelojPremium();
 $resultado    = $relojPremium->getGastoEnergetico(0);
 echo 'Reloj Premium  (0seg)      : ' . $resultado . "\n";
-$resultado = $relojPremium->getGastoEnergetico(4);
+$resultado = $relojPremium->getGastoEnergetico(10);
 echo 'Reloj Premium (4seg)       : ' . $resultado . "\n";
 
 // Completar con resolucion de punto 2
