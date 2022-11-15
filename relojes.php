@@ -8,7 +8,7 @@ abstract class Reloj
    {
     for($i=0; $i < sizeof($this->digitos); $i++){
         $this->digitos[$i] = date("His", $digito)[$i];
-    }
+        }
     }
     protected function encender()
     {
