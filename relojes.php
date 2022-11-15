@@ -27,7 +27,7 @@ abstract class Reloj
         }
         return $this->microwattsGastados;
     }
-    protected abstract function calcularGastoDigito(int $num);
+    protected abstract function calcularGastoDigito(string $digito);
 }
 
 class RelojEstandar extends Reloj
@@ -39,9 +39,9 @@ class RelojEstandar extends Reloj
     {
         $this->digitos = [0,0,0,0,0,0];
     }
-    protected function calcularGastoDigito(int $num)
+    protected function calcularGastoDigito(string $digito)
     {
-        switch ($num){
+        switch ($digito){
             case '0':
                 return 6;
             case '1':
@@ -70,7 +70,7 @@ class RelojPremium extends Reloj
 {
     protected $digitos;
     protected $microwattsGastados;
-    public $contadorSeg;
+    protected $contadorSeg;
     private $contadorDec;
     private $casoCero;
     function __construct()
@@ -88,10 +88,10 @@ class RelojPremium extends Reloj
             $this->casoCero = 2;
         }else $this->casoCero = 0;
     }
-    protected function calcularGastoDigito(int $num)
+    protected function calcularGastoDigito(string $digito)
     {   
         $this->comprobarCero();
-        switch ($num){
+        switch ($digito){
             case '0':
                 return $this->casoCero;
             case '1': 
