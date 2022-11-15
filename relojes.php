@@ -4,15 +4,15 @@ abstract class Reloj
     protected $digitos;
     protected $microwattsGastados;
     protected $contadorSeg;
-   protected function convertirSegundos(int $digito)
-   {
-    for($i=0; $i < sizeof($this->digitos); $i++){
-        $this->digitos[$i] = date("His", $digito)[$i];
-    }
-    }
     protected function encender()
     {
         $this->microwattsGastados = 36;
+    }
+    protected function convertirSegundos(int $digito)
+    {
+    for($i=0; $i < sizeof($this->digitos); $i++){
+        $this->digitos[$i] = date("His", $digito)[$i];
+        }
     }
     public function getGastoEnergetico(int $segundos)
     {
