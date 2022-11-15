@@ -6,33 +6,9 @@ abstract class Reloj
     protected $contadorSeg;
    protected function convertirSegundos(int $digito)
    {
-    $horas = floor($digito/3600);
-    $minutos = floor(($digito-($horas*3600))/60);
-    $segundos = $digito-($horas*3600)-($minutos*60);
-    if($horas < 10){
-         $this->digitos[0] = '0';
-         $this->digitos[1] = strval($horas);
-        }else{
-            $horas = strval($horas);
-            $this->digitos[0] = $horas[0];
-            $this->digitos[1] = $horas[1];
-        }
-    if($minutos < 10){
-        $this->digitos[2] = '0';
-        $this->digitos[3] = strval($minutos);
-        }else{
-            $minutos = strval($minutos);
-            $this->digitos[2] = $minutos[0];
-            $this->digitos[3] = $minutos[1];
-        }
-    if($segundos < 10){
-        $this->digitos[4] = '0';
-        $this->digitos[5] = strval($segundos);
-        }else{
-            $segundos = strval($segundos);
-            $this->digitos[4] = $segundos[0];
-            $this->digitos[5] = $segundos[1];
-        }
+    for($i=0; $i < sizeof($this->digitos); $i++){
+        $this->digitos[$i] = date("His", $digito)[$i];
+    }
     }
     protected function encender()
     {
@@ -51,7 +27,7 @@ abstract class Reloj
         }
         return $this->microwattsGastados;
     }
-    protected abstract function calcularGastoDigito(string $digito);
+    protected abstract function calcularGastoDigito(int $num);
 
 }
 
@@ -64,9 +40,9 @@ class RelojEstandar extends Reloj
     {
         $this->digitos = [0,0,0,0,0,0];
     }
-    protected function calcularGastoDigito(string $digito)
+    protected function calcularGastoDigito(int $num)
     {
-        switch ($digito){
+        switch ($num){
             case '0':
                 return 6;
             case '1':
@@ -113,10 +89,10 @@ class RelojPremium extends Reloj
             $this->casoCero = 2;
         }else $this->casoCero = 0;
     }
-    protected function calcularGastoDigito(string $digito)
+    protected function calcularGastoDigito(int $num)
     {   
         $this->comprobarCero();
-        switch ($digito){
+        switch ($num){
             case '0':
                 return $this->casoCero;
             case '1': 
@@ -152,16 +128,14 @@ echo 'Reloj Estandar (4seg)      : ' . $resultado . "\n";
 $relojPremium = new RelojPremium();
 $resultado    = $relojPremium->getGastoEnergetico(0);
 echo 'Reloj Premium  (0seg)      : ' . $resultado . "\n";
-$resultado = $relojPremium->getGastoEnergetico(10);
+$resultado = $relojPremium->getGastoEnergetico(4);
 echo 'Reloj Premium (4seg)       : ' . $resultado . "\n";
 
 // Completar con resolucion de punto 2
-$unDiaRelojEstandar = $relojEstandar->getGastoEnergetico(86400); 
-$unDiaRelojPremium = $relojPremium->getGastoEnergetico(86400);
+$unDiaRelojEstandar = $relojEstandar->getGastoEnergetico(86399); 
+$unDiaRelojPremium = $relojPremium->getGastoEnergetico(86399);
 $microwattsEnUnWatt= 1000000;
 
 $ahorro = ($unDiaRelojEstandar - $unDiaRelojPremium) / $microwattsEnUnWatt;
 
 echo 'Ahorro Premium vs Estandar : ' . $ahorro . "\n";
-
-
