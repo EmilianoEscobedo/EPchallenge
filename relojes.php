@@ -8,7 +8,7 @@ abstract class Reloj
    {
     for($i=0; $i < sizeof($this->digitos); $i++){
         $this->digitos[$i] = date("His", $digito)[$i];
-        }
+    }
     }
     protected function encender()
     {
@@ -27,7 +27,8 @@ abstract class Reloj
         }
         return $this->microwattsGastados;
     }
-    protected abstract function calcularGastoDigito(string $digito);
+    protected abstract function calcularGastoDigito(int $num);
+
 }
 
 class RelojEstandar extends Reloj
@@ -39,9 +40,9 @@ class RelojEstandar extends Reloj
     {
         $this->digitos = [0,0,0,0,0,0];
     }
-    protected function calcularGastoDigito(string $digito)
+    protected function calcularGastoDigito(int $num)
     {
-        switch ($digito){
+        switch ($num){
             case '0':
                 return 6;
             case '1':
@@ -70,7 +71,7 @@ class RelojPremium extends Reloj
 {
     protected $digitos;
     protected $microwattsGastados;
-    protected $contadorSeg;
+    public $contadorSeg;
     private $contadorDec;
     private $casoCero;
     function __construct()
@@ -83,15 +84,15 @@ class RelojPremium extends Reloj
         if (($this->contadorSeg % 10) == 0){
             $this->contadorDec++;
         }
-        if (($this->contadorDec == 6) && ($this->contadorDec != 0)){
+        if (($this->contadorDec == sizeof($this->digitos)) && ($this->contadorDec != 0)){
             $this->contadorDec = 0;
             $this->casoCero = 2;
         }else $this->casoCero = 0;
     }
-    protected function calcularGastoDigito(string $digito)
+    protected function calcularGastoDigito(int $num)
     {   
         $this->comprobarCero();
-        switch ($digito){
+        switch ($num){
             case '0':
                 return $this->casoCero;
             case '1': 
