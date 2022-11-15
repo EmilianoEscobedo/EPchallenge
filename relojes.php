@@ -11,7 +11,7 @@ abstract class Reloj
     protected function convertirSegundos(int $digito)
     {
     for($i=0; $i < sizeof($this->digitos); $i++){
-        $this->digitos[$i] = date("His", $digito)[$i];
+        $this->digitos[$i] = intval(date("His", $digito)[$i]);
         }
     }
     public function getGastoEnergetico(int $segundos)
@@ -25,9 +25,10 @@ abstract class Reloj
             }
         $this->contadorSeg++;
         }
-    return $this->microwattsGastados;
+        return $this->microwattsGastados;
     }
-    protected abstract function calcularGastoDigito(int $num);
+    protected abstract function calcularGastoDigito(int $digito);
+
 }
 
 class RelojEstandar extends Reloj
@@ -39,28 +40,28 @@ class RelojEstandar extends Reloj
     {
         $this->digitos = [0,0,0,0,0,0];
     }
-    protected function calcularGastoDigito(int $num)
+    protected function calcularGastoDigito(int $digito)
     {
-        switch ($num){
-            case '0':
+        switch ($digito){
+            case 0:
                 return 6;
-            case '1':
+            case 1:
                 return 2;
-            case '2':
+            case 2:
                 return 5;
-            case '3':
+            case 3:
                 return 5;
-            case '4':
+            case 4:
                 return 4;
-            case '5':
+            case 5:
                 return 5;
-            case '6':
+            case 6:
                 return 5;
-            case '7':
+            case 7:
                 return 3;
-            case '8':
+            case 8:
                 return 7;
-            case '9':
+            case 9:
                 return 5;
         }
     }
@@ -88,34 +89,33 @@ class RelojPremium extends Reloj
             $this->casoCero = 2;
         }else $this->casoCero = 0;
     }
-    protected function calcularGastoDigito(int $num)
+    protected function calcularGastoDigito(int $digito)
     {   
         $this->comprobarCero();
-        switch ($num){
-            case '0':
+        switch ($digito){
+            case 0:
                 return $this->casoCero;
-            case '1': 
+            case 1: 
                 return 0;
-            case '2':
+            case 2:
                 return 4;
-            case '3':
+            case 3:
                 return 1;
-            case '4':
+            case 4:
                 return 1;
-            case '5':
+            case 5:
                 return 1;
-            case '6':
+            case 6:
                 return 1;
-            case '7':
+            case 7:
                 return 1;
-            case '8':
+            case 8:
                 return 4;
-            case '9':
+            case 9:
                 return 0;
         }
     }   
 }
-
 
 // Casos de Prueba
 $relojEstandar = new RelojEstandar();
