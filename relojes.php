@@ -28,7 +28,6 @@ abstract class Reloj
     return $this->microwattsGastados;
     }
     protected abstract function calcularGastoDigito(int $num);
-
 }
 
 class RelojEstandar extends Reloj
