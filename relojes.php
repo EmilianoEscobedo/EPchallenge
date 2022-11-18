@@ -25,7 +25,7 @@ abstract class Reloj
             }
         $this->contadorSeg++;
         }
-        return $this->microwattsGastados;
+    return $this->microwattsGastados;
     }
     protected abstract function calcularGastoDigito(int $digito);
 
